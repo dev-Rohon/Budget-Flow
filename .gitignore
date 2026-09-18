@@ -1,0 +1,28 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+backend/venv/
+
+# Node
+node_modules/
+
+# Frontend build
+frontend/dist/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+stitch_budgetflow_personal_finance_dashboard (1)/
+
+stitch_budgetflow_personal_finance_dashboard (1).zip

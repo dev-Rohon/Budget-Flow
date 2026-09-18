@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme - Fiscal Precision */
+    --background: #fbf8fa;
+    --on-background: #1b1b1d;
+
+    --surface: #fbf8fa;
+    --on-surface: #1b1b1d;
+    --surface-container-lowest: #ffffff;
+    --surface-container-low: #f5f3f4;
+    --surface-container: #f0edef;
+    --surface-container-high: #eae7e9;
+    --surface-container-highest: #e4e2e3;
+
+    --primary: #091426;
+    --on-primary: #ffffff;
+
+    --on-surface-variant: #45474c;
+    --outline: #75777d;
+    --outline-variant: #c5c6cd;
+
+    --primary-container: #1e293b;
+    --on-primary-container: #8590a6;
+
+    --secondary: #505f76;
+
+    --error: #ba1a1a;
+  }
+
+  .dark {
+    /* Dark theme */
+    --background: #101418;
+    --on-background: #e6e1e3;
+
+    --surface: #101418;
+    --on-surface: #e6e1e3;
+
+    --surface-container-lowest: #15191d;
+    --surface-container-low: #1a1e22;
+    --surface-container: #20252a;
+    --surface-container-high: #292e33;
+    --surface-container-highest: #33383e;
+
+    --primary: #d8e3fb;
+    --on-primary: #111c2d;
+
+    --on-surface-variant: #c5c6cd;
+    --outline: #8f9197;
+    --outline-variant: #45474c;
+
+    --primary-container: #c1cce2;
+    --on-primary-container: #111c2d;
+
+    --secondary: #b7c8e1;
+
+    --error: #ffb4ab;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--on-background);
+    font-family: theme('fontFamily.sans');
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+  }
+
+  .material-symbols-outlined[data-weight="fill"],
+  .material-symbols-outlined.filled {
+    font-variation-settings:
+      'FILL' 1,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+  }
+}
+
+@layer utilities {
+  .text-label-caps {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .text-body-sm {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+  }
+
+  .text-body-lg {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+  }
+
+  .text-headline-md {
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+
+  .text-headline-lg {
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  .text-data-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+}
