@@ -26,32 +26,58 @@ export const apiRequest = async (endpoint, options = {}) => {
 
   try {
     data = await response.json();
-  } catch (_error) {
-    // Response has no JSON body
-  }
-
-  // JWT expired / invalid
-  if (response.status === 401) {
-    localStorage.removeItem('budgetflow-access-token');
-    localStorage.removeItem('budgetflow-auth');
-
-    // Store a temporary message for the login page
-    sessionStorage.setItem(
-      'budgetflow-session-expired',
-      'Your session expired. Please log in again.'
-    );
-
-    // Avoid redirecting if we're already on the login page
-    if (window.location.pathname !== '/login') {
-      window.location.href = '/login';
-    }
-
-    throw new Error('Your session expired. Please log in again.');
-  }
+  } catch (_error) {}
 
   if (!response.ok) {
-    const message =
-      data?.detail || `Request failed with status ${response.status}`;
+    let message = `Request failed with status ${response.status}`;
+
+    if (typeof data?.detail === 'string') {
+      message = data.detail;
+    } else if (Array.isArray(data?.detail)) {
+      message = data.detail
+        .map((item) => {
+          if (typeof item === 'string') return item;
+          return item?.msg || item?.message || JSON.stringify(item);
+        })
+        .join(', ');
+    } else if (data?.detail && typeof data.detail === 'object') {
+      message =
+        data.detail.message ||
+        data.detail.msg ||
+        data.detail.error ||
+        JSON.stringify(data.detail);
+    } else if (typeof data?.message === 'string') {
+      message = data.message;
+    }
+
+    // Only treat a 401 as an expired session for protected requests.
+    // Login/signup/OTP/password-reset requests can legitimately return 401.
+    const isProtectedRequest =
+      !endpoint.startsWith('/auth/login') &&
+      !endpoint.startsWith('/auth/signup') &&
+      !endpoint.startsWith('/auth/verify-otp') &&
+      !endpoint.startsWith('/auth/verify-login-otp') &&
+      !endpoint.startsWith('/auth/resend-otp') &&
+      !endpoint.startsWith('/auth/resend-login-otp') &&
+      !endpoint.startsWith('/auth/forgot-password') &&
+      !endpoint.startsWith('/auth/verify-reset-otp') &&
+      !endpoint.startsWith('/auth/reset-password');
+
+    if (response.status === 401 && token && isProtectedRequest) {
+      localStorage.removeItem('budgetflow-access-token');
+      localStorage.removeItem('budgetflow-auth');
+
+      sessionStorage.setItem(
+        'budgetflow-session-expired',
+        'Your session expired. Please log in again.'
+      );
+
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
+
+      throw new Error('Your session expired. Please log in again.');
+    }
 
     throw new Error(message);
   }
