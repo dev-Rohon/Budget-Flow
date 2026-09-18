@@ -14,7 +14,7 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
-import { VerifyResetOTPPage } from './pages/VerifyResetOTPPage';
+import { VerifyResetOtpPage } from './pages/VerifyResetOtpPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 
 export default function App() {
