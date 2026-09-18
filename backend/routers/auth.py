@@ -150,7 +150,13 @@ def verify_otp_endpoint(
     db.delete(otp_record)
     db.commit()
 
-    return {"message": "OTP verified successfully"}
+    access_token = create_access_token(user.id)
+
+    return {
+        "message": "OTP verified successfully",
+        "access_token": access_token,
+        "token_type": "bearer",
+    }
 
 
 @router.post(

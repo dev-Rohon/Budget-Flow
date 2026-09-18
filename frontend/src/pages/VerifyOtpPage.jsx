@@ -100,6 +100,15 @@ export const VerifyOtpPage = () => {
 
       // Signup OTP → create the local user session
       else {
+        if (!data.access_token) {
+          throw new Error('Access token was not received from the server.');
+        }
+
+        localStorage.setItem(
+          'budgetflow-access-token',
+          data.access_token
+        );
+
         signUpUser({
           name,
           email,
@@ -158,101 +167,101 @@ export const VerifyOtpPage = () => {
     } finally {
       setResendLoading(false);
     }
-   };
+  };
 
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <div className="w-full max-w-md">
-          <div className="rounded-2xl bg-surface-container p-8 shadow-lg">
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+      <div className="w-full max-w-md">
+        <div className="rounded-2xl bg-surface-container p-8 shadow-lg">
 
-            <div className="mb-8 text-center">
-              <h1 className="text-2xl font-bold text-on-surface">
-                {isLoginOtp ? 'Verify Your Login' : 'Verify Your Email'}
-              </h1>
+          <div className="mb-8 text-center">
+            <h1 className="text-2xl font-bold text-on-surface">
+              {isLoginOtp ? 'Verify Your Login' : 'Verify Your Email'}
+            </h1>
 
-              <p className="mt-2 text-sm text-on-surface-variant">
-                Enter the 6-digit OTP sent to your email address.
-              </p>
+            <p className="mt-2 text-sm text-on-surface-variant">
+              Enter the 6-digit OTP sent to your email address.
+            </p>
+          </div>
+
+          <form onSubmit={handleVerifyOtp} className="space-y-5">
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-on-surface">
+                Email
+              </label>
+
+              <div className="w-full rounded-xl border border-outline bg-surface px-4 py-3 text-on-surface">
+                {email}
+              </div>
             </div>
 
-            <form onSubmit={handleVerifyOtp} className="space-y-5">
+            <div>
+              <label
+                htmlFor="otp"
+                className="mb-2 block text-sm font-medium text-on-surface"
+              >
+                OTP
+              </label>
 
-              <div>
-                <label className="mb-2 block text-sm font-medium text-on-surface">
-                  Email
-                </label>
+              <input
+                id="otp"
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={otp}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, '');
+                  setOtp(value);
+                }}
+                placeholder="Enter 6-digit OTP"
+                className="w-full rounded-xl border border-outline bg-surface px-4 py-3 text-center text-lg tracking-[0.4em] text-on-surface outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
 
-                <div className="w-full rounded-xl border border-outline bg-surface px-4 py-3 text-on-surface">
-                  {email}
-                </div>
-              </div>
+            {error && (
+              <p className="rounded-lg bg-error-container px-4 py-3 text-sm text-on-error-container">
+                {error}
+              </p>
+            )}
 
-              <div>
-                <label
-                  htmlFor="otp"
-                  className="mb-2 block text-sm font-medium text-on-surface"
-                >
-                  OTP
-                </label>
+            {success && (
+              <p className="rounded-lg bg-primary-container px-4 py-3 text-sm text-on-primary-container">
+                {success}
+              </p>
+            )}
 
-                <input
-                  id="otp"
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  value={otp}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, '');
-                    setOtp(value);
-                  }}
-                  placeholder="Enter 6-digit OTP"
-                  className="w-full rounded-xl border border-outline bg-surface px-4 py-3 text-center text-lg tracking-[0.4em] text-on-surface outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
+            <button
+              type="submit"
+              disabled={loading || resendLoading}
+              className="w-full rounded-xl bg-primary px-4 py-3 font-semibold text-on-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? 'Verifying...' : 'Verify OTP'}
+            </button>
 
-              {error && (
-                <p className="rounded-lg bg-error-container px-4 py-3 text-sm text-on-error-container">
-                  {error}
-                </p>
-              )}
-
-              {success && (
-                <p className="rounded-lg bg-primary-container px-4 py-3 text-sm text-on-primary-container">
-                  {success}
-                </p>
-              )}
+            {/* Resend OTP */}
+            <div className="text-center">
+              <p className="text-sm text-on-surface-variant">
+                Didn't receive the email?
+              </p>
 
               <button
-                type="submit"
-                disabled={loading || resendLoading}
-                className="w-full rounded-xl bg-primary px-4 py-3 font-semibold text-on-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                type="button"
+                onClick={handleResendOtp}
+                disabled={resendCooldown > 0 || resendLoading || loading}
+                className="mt-2 font-semibold text-primary hover:underline disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
               >
-                {loading ? 'Verifying...' : 'Verify OTP'}
+                {resendLoading
+                  ? 'Sending...'
+                  : resendCooldown > 0
+                    ? `Resend OTP in ${resendCooldown}s`
+                    : 'Resend OTP'}
               </button>
+            </div>
 
-              {/* Resend OTP */}
-              <div className="text-center">
-                <p className="text-sm text-on-surface-variant">
-                  Didn't receive the email?
-                </p>
-
-                <button
-                  type="button"
-                  onClick={handleResendOtp}
-                  disabled={resendCooldown > 0 || resendLoading || loading}
-                  className="mt-2 font-semibold text-primary hover:underline disabled:cursor-not-allowed disabled:no-underline disabled:opacity-50"
-                >
-                  {resendLoading
-                    ? 'Sending...'
-                    : resendCooldown > 0
-                      ? `Resend OTP in ${resendCooldown}s`
-                      : 'Resend OTP'}
-                </button>
-              </div>
-
-            </form>
-          </div>
+          </form>
         </div>
       </div>
-    );
-  };
+    </div>
+  );
+};
