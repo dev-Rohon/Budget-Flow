@@ -27,7 +27,7 @@ export default function App() {
       <Route path="/verify-otp" element={<VerifyOtpPage />} />
       <Route path="/verify-login-otp" element={<VerifyOtpPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/verify-reset-otp" element={<VerifyResetOTPPage />} />
+      <Route path="/verify-reset-otp" element={<VerifyResetOtpPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       {/* App Shell Pages (Wrapped with Sidebar / BottomNav Layout) - Protected */}
